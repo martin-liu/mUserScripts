@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       Google search result URL filter
 // @namespace  http://martin-liu.github.io/
-// @updateURL  https://raw.githubusercontent.com/martin-liu/mUserScripts/master/googleRealUrl.js
+// @updateURL  https://raw.githubusercontent.com/martin-liu/mUserScripts/master/googleRealUrl/googleRealUrl.js
 // @version    0.2
 // @description  This script replace the url of google search result to the real url
 // @include    https://www.google.com.hk/search*

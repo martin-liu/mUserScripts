@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name       Gllue Data Mover
-// @namespace  http://use.i.E.your.homepage/
+// @namespace  http://martin-liu.github.io/
+// @updateURL  https://raw.githubusercontent.com/martin-liu/mUserScripts/master/gllueDataMover/gllueDataMover.js
 // @version    0.1
 // @description  This script helps user to move data from gllue
 // @match      http://42.121.115.134/job
-// @copyright  2012+, You
+// @copyright  2014+, Martin Liu
 // ==/UserScript==
 
 var hackTpl = "<div style=\"margin:30px;border:solid 1px;\">\n    <h3 class=\"heading no-bottom-line clear\">\n        <span class=\"label industry\" data-i18n=\"candidate\" data-woven=\"shared/helper/translation@1703\">候选人</span>\n        {{ chineseName }}\n    </h3>\n\n    <div class=\"pull-right heading-bar\">\n        <span class=\"label status\" style=\"background-color: #ff9300;\">{{ status.zh_CN }}</span>\n        <span class=\"label industry\">{{ industry.name }}</span>\n    </div>\n\n    <div class=\"tab-content\">\n        <div class=\"tab-pane active\" id=\"people-resume-tab\">\n            <div class=\"vcard\">\n                <ul class=\"full-width\">\n                    <li class=\"v-heading\">\n                        <span data-i18n=\"Basic Info\" data-woven=\"shared/helper/translation@1721\">基本信息</span>\n                    </li>\n        \n                    <li class=\"clearfix\">\n                        <div class=\"span6\">\n                            <span class=\"item-key\" data-i18n=\"Email\" data-woven=\"shared/helper/translation@1722\">邮件</span>\n                            <div class=\"vcard-item\">\n                                <span data-i18n=\"Private email\" data-woven=\"shared/helper/translation@1723\">私人</span>:\n                                <a href=\"#\" data-action=\"email\" data-type=\"email\" data-email=\"scusong@163.com\">{{ email }}</a>\n                            </div>\n                        </div>\n                        <div class=\"span6\">\n                            <span class=\"item-key\" data-i18n=\"Phone\" data-woven=\"shared/helper/translation@1724\">电话</span>\n                            <div class=\"vcard-item\">\n                                <span data-i18n=\"Mobile\" data-woven=\"shared/helper/translation@1725\">手机</span>:\n                                <a href=\"tel:18180519225\">{{mobile}}</a>\n                            </div>\n                        </div>\n                    </li>\n\n                    <li class=\"clearfix\">\n                        <div class=\"span6\">\n                            <span class=\"item-key\" data-i18n=\"Working place\" data-woven=\"shared/helper/translation@1726\">工作城市</span>\n                            <div class=\"vcard-item\">{{location.name}}</div>\n                        </div>\n                        <div class=\"span6\">\n                            <span class=\"item-key\" data-i18n=\"Intention City\" data-woven=\"shared/helper/translation@1727\">意向城市</span>\n                            <div class=\"vcard-item\">\n                                &nbsp;\n                            </div>\n                        </div>\n                    </li>\n                    \n                    <li class=\"clearfix\">\n                        <div class=\"span6\">\n                            <span class=\"item-key\" data-i18n=\"Annual Salary\" data-woven=\"shared/helper/translation@1728\">年薪</span>\n                            <div class=\"vcard-item\">\n                               {{annualSalary}} \n                            </div>\n                        </div>\n                        <div class=\"span6\">\n                            <span class=\"item-key\" data-i18n=\"Gender\" data-woven=\"shared/helper/translation@1729\">性别</span>\n                            <div class=\"vcard-item\">\n                                <span data-i18n=\"Male\" data-woven=\"shared/helper/translation@1730\">\n                                    {{#if gender}}\n                                        男\n                                    {{else}}\n                                        女\n                                    {{/if}}\n                                </span>\n                            </div>\n                        </div>\n                    </li>\n\n                    <li class=\"clearfix\">\n                        <div class=\"span6\">\n                            <span class=\"item-key\" data-i18n=\"Date of birth\" data-woven=\"shared/helper/translation@1731\">生日</span>\n                            <div class=\"vcard-item\">{{dateOfBirth}}</div>\n                        </div>\n                    </li>\n\n                    <li class=\"clearfix\">\n                        <div class=\"span6\">\n                            <span class=\"item-key\" data-i18n=\"Keyin By\" data-woven=\"shared/helper/translation@1732\">输入者</span>\n                            <div class=\"vcard-item\">\n                                <a href=\"/user/preview#525\" data-action=\"open/profile\">{{addedBy.chineseName}}</a>\n                            </div>\n                        </div>\n                        \n                    </li>\n                    \n                    <li class=\"clearfix\">\n                        <div class=\"span6\">\n                            <span class=\"item-key\" data-i18n=\"Owner\" data-woven=\"shared/helper/translation@1733\">拥有者</span>\n                            <div class=\"vcard-item\"><a href=\"/user/preview#525\" data-action=\"open/profile\">{{owner.englishName}}</a></div>\n                        </div>\n                    </li>\n                    \n                    <li class=\"v-heading clear\">\n                        <span data-i18n=\"Work Experiences\" data-woven=\"shared/helper/translation@1736\">工作经历</span>\n                        <span class=\"muted pull-right\">\n                            <span data-i18n=\"Years of experience\" data-woven=\"shared/helper/translation@1737\">工作经验</span>:\n                            {{work_years}} <span data-i18n=\"Year(s)\" data-woven=\"shared/helper/translation@1738\">年</span>\n                            &nbsp;&nbsp;\n                            <span data-i18n=\"On Job\" data-woven=\"shared/helper/translation@1739\">在职</span>:\n                            {{current_years}} <span data-i18n=\"Year(s)\" data-woven=\"shared/helper/translation@1740\">年</span>\n                        </span>\n                    </li>\n                    <li>\n                        {{#each experiences}}\n                        <div class=\"entity\">\n                            <dl class=\"dl-horizontal\">\n                                <dt>{{start}} - <span data-i18n=\"Present\" data-woven=\"shared/helper/translation@1741\">\n                                {{#if is_current}}\n                                    至今\n                                {{else}}\n                                    {{end}}\n                                {{/if}}\n                                </span></dt>\n                                <dd>\n                                    <strong><a href=\"/company#detail!id=11689\" target=\"_blank\">{{client.name}}</a></strong>\n                                    <span class=\"label industry\">{{client.industry.name}}</span>\n                                </dd>\n                                <dt></dt>\n                                <dd>\n                                    <strong class=\"muted\">{{title}}</strong>\n                                </dd>\n                            </dl>\n                            \n                            <div class=\"description\">\n                                {{description}}\n                            </div>\n                        </div>\n                        {{/each}}\n                    </li>\n                    \n                    <li class=\"v-heading clear\">\n                        <span data-i18n=\"Education Experiences\" data-woven=\"shared/helper/translation@1742\">教育经历</span>\n                    </li>\n                    <li>\n                        {{#each education}}                        \n                        <div class=\"entity\">\n                            <dl class=\"dl-horizontal\">\n                                <dt>{{start}} - {{end}}</dt>\n                                <dd>\n                                    <strong>{{school}}</strong>\n                                </dd>\n                                <dt></dt>\n                                <dd>\n                                    {{degree}} , {{major}}\n                                </dd>\n                                \n                            </dl>\n                        </div>\n                        {{/each}}\n                    </li>\n\n                    <li class=\"v-heading clear\">\n                        <span>备注</span>\n                    </li>\n                    <li>\n                        {{#each note.list}}                        \n                            <div class=\"tab-pane active\" id=\"people-note-tab\" data-woven=\"app/widget/candidate/detail/note-tab/main@309\">\n                                <div class=\"activity-item clearfix\" data-type=\"Candidate Call\">\n                                    <div class=\"pull-left span2 activity-time\">\n                                        <p>\n                                            <span><span class=\"event-date\" data-added=\"2014-04-03 17:39\" data-original-title=\"\" title=\"\">{{dateAdded}}</span></span>\n                                            <a href=\"/user/preview#525\" data-action=\"profile/open\">{{user.englishName}}</a><br>\n                                        </p>\n                                    </div>\n                                    <div class=\"pull-left span10 activity-detail\">\n                                        <div class=\"well\">\n                                            <div class=\"title clearfix\">\n                                                <span class=\"label\" style=\"background-color: #86a7ff\">{{category.value}}</span>\n                                                <span class=\"label\" style=\"background-color: #ff9300;\" data-name=\"status\">{{status.value}}</span>\n                                            </div>\n                                            <div class=\"content\" data-name=\"notes\">\n                                                {{#each items}}\n                                                <h4>{{field}}</h4>\n                                                <p>\n                                                    {{value}}\n                                                </p>\n                                                {{/each}}\n                                            </div>\n                                        </div>\n                                    </div>\n                                </div>\n                                </div>\n                        {{/each}}\n                    </li>\n                </ul>    \n            </div>\n            \n        </div>\n    </div>\n</div>";
@@ -13,48 +14,48 @@ var Handlebars=function(){var a=function(){"use strict";function a(a){this.strin
 
 
 (function(){
-	function waitForStart(){
-		if (typeof jQuery != 'undefined' && jQuery('h3.heading').length > 0){
-			go();
-		} else {
-			setTimeout(waitForStart, 2000);
-		}
-	}
+        function waitForStart(){
+                if (typeof jQuery != 'undefined' && jQuery('h3.heading').length > 0){
+                        go();
+                } else {
+                        setTimeout(waitForStart, 2000);
+                }
+        }
 
-	function go(){
-		var actionButton = $('<button class="btn btn-default">Go</button>');
-		actionButton.on('click', doProcess);
+        function go(){
+                var actionButton = $('<button class="btn btn-default">Go</button>');
+                actionButton.on('click', doProcess);
 
-		var container = $('.main_content>.row-fluid');
-	    container.append(actionButton);
-	    container.append('<div id="gllueHackContainer" class="container"></div>');
-	}
+                var container = $('.main_content>.row-fluid');
+            container.append(actionButton);
+            container.append('<div id="gllueHackContainer" class="container"></div>');
+        }
 
-	function doProcess () {
-		var candidates = $('[name=candidates]');
-		$.each(candidates, processCandidate);
-	}
+        function doProcess () {
+                var candidates = $('[name=candidates]');
+                $.each(candidates, processCandidate);
+        }
 
-	function processCandidate(index, candidate){
-		var cand = $(candidate);
-		var canId = cand.val();
-		var container = $('#gllueHackContainer');
+        function processCandidate(index, candidate){
+                var cand = $(candidate);
+                var canId = cand.val();
+                var container = $('#gllueHackContainer');
 
-		$.get('/rest/candidate/' + canId + '?_v=45', function(data){
-			// get 备注信息
-			$.get('/rest/note/list?paginate_by=200&external_type=candidate&external_id=' + canId + '&_v=45', function(note){
-				data.note = note;
-				container.append(renderData(data));
-			});
-		});	
-	}
+                $.get('/rest/candidate/' + canId + '?_v=45', function(data){
+                        // get 备注信息
+                        $.get('/rest/note/list?paginate_by=200&external_type=candidate&external_id=' + canId + '&_v=45', function(note){
+                                data.note = note;
+                                container.append(renderData(data));
+                        });
+                });
+        }
 
-	function renderData (data) {
-		render = Handlebars.compile(hackTpl);
-		return render(data);
-	}
+        function renderData (data) {
+                render = Handlebars.compile(hackTpl);
+                return render(data);
+        }
 
-	waitForStart();
+        waitForStart();
 })();
 
 
@@ -76,7 +77,7 @@ var Handlebars=function(){var a=function(){"use strict";function a(a){this.strin
 //                     <li class="v-heading">
 //                         <span data-i18n="Basic Info" data-woven="shared/helper/translation@1721">基本信息</span>
 //                     </li>
-        
+
 //                     <li class="clearfix">
 //                         <div class="span6">
 //                             <span class="item-key" data-i18n="Email" data-woven="shared/helper/translation@1722">邮件</span>
@@ -106,12 +107,12 @@ var Handlebars=function(){var a=function(){"use strict";function a(a){this.strin
 //                             </div>
 //                         </div>
 //                     </li>
-                    
+
 //                     <li class="clearfix">
 //                         <div class="span6">
 //                             <span class="item-key" data-i18n="Annual Salary" data-woven="shared/helper/translation@1728">年薪</span>
 //                             <div class="vcard-item">
-//                                {{annualSalary}} 
+//                                {{annualSalary}}
 //                             </div>
 //                         </div>
 //                         <div class="span6">
@@ -142,16 +143,16 @@ var Handlebars=function(){var a=function(){"use strict";function a(a){this.strin
 //                                 <a href="/user/preview#525" data-action="open/profile">{{addedBy.chineseName}}</a>
 //                             </div>
 //                         </div>
-                        
+
 //                     </li>
-                    
+
 //                     <li class="clearfix">
 //                         <div class="span6">
 //                             <span class="item-key" data-i18n="Owner" data-woven="shared/helper/translation@1733">拥有者</span>
 //                             <div class="vcard-item"><a href="/user/preview#525" data-action="open/profile">{{owner.englishName}}</a></div>
 //                         </div>
 //                     </li>
-                    
+
 //                     <li class="v-heading clear">
 //                         <span data-i18n="Work Experiences" data-woven="shared/helper/translation@1736">工作经历</span>
 //                         <span class="muted pull-right">
@@ -182,19 +183,19 @@ var Handlebars=function(){var a=function(){"use strict";function a(a){this.strin
 //                                     <strong class="muted">{{title}}</strong>
 //                                 </dd>
 //                             </dl>
-                            
+
 //                             <div class="description">
 //                                 {{description}}
 //                             </div>
 //                         </div>
 //                         {{/each}}
 //                     </li>
-                    
+
 //                     <li class="v-heading clear">
 //                         <span data-i18n="Education Experiences" data-woven="shared/helper/translation@1742">教育经历</span>
 //                     </li>
 //                     <li>
-//                         {{#each education}}                        
+//                         {{#each education}}
 //                         <div class="entity">
 //                             <dl class="dl-horizontal">
 //                                 <dt>{{start}} - {{end}}</dt>
@@ -205,7 +206,7 @@ var Handlebars=function(){var a=function(){"use strict";function a(a){this.strin
 //                                 <dd>
 //                                     {{degree}} , {{major}}
 //                                 </dd>
-                                
+
 //                             </dl>
 //                         </div>
 //                         {{/each}}
@@ -215,7 +216,7 @@ var Handlebars=function(){var a=function(){"use strict";function a(a){this.strin
 //                         <span>备注</span>
 //                     </li>
 //                     <li>
-//                         {{#each note.list}}                        
+//                         {{#each note.list}}
 //                             <div class="tab-pane active" id="people-note-tab" data-woven="app/widget/candidate/detail/note-tab/main@309">
 //                                 <div class="activity-item clearfix" data-type="Candidate Call">
 //                                     <div class="pull-left span2 activity-time">
@@ -244,9 +245,9 @@ var Handlebars=function(){var a=function(){"use strict";function a(a){this.strin
 //                                 </div>
 //                         {{/each}}
 //                     </li>
-//                 </ul>    
+//                 </ul>
 //             </div>
-            
+
 //         </div>
 //     </div>
 // </div>
