@@ -49,7 +49,7 @@ addJQuery(function($){
                 } else {
                     this.state.needEmail = true;
                 }
-            } else if ($('div#global-error>div.alert.success').length > 0 && window.location.href.indexOf('pymk') > 0){
+            } else if (window.location.href.indexOf('goback') > 0){
                 this.state.inSuccessPage = true;
             }
         };
