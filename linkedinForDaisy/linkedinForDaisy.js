@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name       Daisy-Linkedin_Connecting_Script
-// @namespace
+// @namespace  http://martin-liu.github.io/
+// @updateURL  https://raw.githubusercontent.com/martin-liu/mUserScripts/master/linkedinForDaisy/linkedinForDaisy.js
 // @version    0.1
 // @description  Linkedin connecting script for Daisy Chu
 // @match      http*://*.linkedin.com/*
-// @copyrigh
+// @copyright  2014+, Martin Liu
 // ==/UserScript==
 function addJQuery(callback) {
     var script = document.createElement("script");
