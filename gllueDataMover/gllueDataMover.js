@@ -14,48 +14,56 @@ var Handlebars=function(){var a=function(){"use strict";function a(a){this.strin
 
 
 (function(){
-        function waitForStart(){
-                if (typeof jQuery != 'undefined' && jQuery('h3.heading').length > 0){
-                        go();
-                } else {
-                        setTimeout(waitForStart, 2000);
-                }
+    function waitForStart(){
+        var cands;
+        if (typeof jQuery != 'undefined' && ( cands = $('a').toArray().filter(function(a){
+            return /^\/candidate#detail/.test($(a).attr('href'));
+        })).length > 0){
+            go();
+        } else {
+            setTimeout(waitForStart, 2000);
         }
+    }
 
-        function go(){
-                var actionButton = $('<button class="btn btn-default">Go</button>');
-                actionButton.on('click', doProcess);
+    function go(){
+        var actionButton = $('<button class="btn btn-default">Go</button>');
+        actionButton.on('click', doProcess);
 
-                var container = $('.main_content>.row-fluid');
-            container.append(actionButton);
-            container.append('<div id="gllueHackContainer" class="container"></div>');
-        }
+        var container = $('.main_content');
+        container.append(actionButton);
+        container.append('<div id="gllueHackContainer" class="container"></div>');
+    }
 
-        function doProcess () {
-                var candidates = $('[name=candidates]');
-                $.each(candidates, processCandidate);
-        }
+    function doProcess () {
+        var cands = $('a').toArray().filter(function(a){
+            return /^\/candidate#detail/.test($(a).attr('href'));
+        })
+        cands = cands.map(function(c){
+            var ret = /^\/candidate#detail!id=(\d*)$/.exec($(c).attr('href'));
+            if (ret.length > 0){
+                return ret[1];
+            }
+        });
+        $.each(cands, processCandidate);
+    }
+    function processCandidate(index, canId){
+        var container = $('#gllueHackContainer');
 
-        function processCandidate(index, candidate){
-                var cand = $(candidate);
-                var canId = cand.val();
-                var container = $('#gllueHackContainer');
+        $.get('/rest/candidate/' + canId + '?_v=45', function(data){
+            // get 备注信息
+            $.get('/rest/note/list?paginate_by=200&external_type=candidate&external_id=' + canId + '&_v=45', function(note){
+                data.note = note;
+                container.append(renderData(data));
+            });
+        });
+    }
 
-                $.get('/rest/candidate/' + canId + '?_v=45', function(data){
-                        // get 备注信息
-                        $.get('/rest/note/list?paginate_by=200&external_type=candidate&external_id=' + canId + '&_v=45', function(note){
-                                data.note = note;
-                                container.append(renderData(data));
-                        });
-                });
-        }
+    function renderData (data) {
+        render = Handlebars.compile(hackTpl);
+        return render(data);
+    }
 
-        function renderData (data) {
-                render = Handlebars.compile(hackTpl);
-                return render(data);
-        }
-
-        waitForStart();
+    waitForStart();
 })();
 
 
