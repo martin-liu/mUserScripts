@@ -2,9 +2,9 @@
 // @name       Gllue Data Mover
 // @namespace  http://martin-liu.github.io/
 // @updateURL  https://raw.githubusercontent.com/martin-liu/mUserScripts/master/gllueDataMover/gllueDataMover.js
-// @version    0.2
+// @version    0.3
 // @description  This script helps user to move data from gllue
-// @match      http://42.121.115.134/job
+// @match      http://42.121.115.134/
 // @copyright  2014+, Martin Liu
 // ==/UserScript==
 
