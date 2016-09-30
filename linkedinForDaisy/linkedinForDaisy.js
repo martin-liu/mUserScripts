@@ -2,7 +2,7 @@
 // @name       Daisy-Linkedin_Connecting_Script
 // @namespace  http://martin-liu.github.io/
 // @updateURL  https://raw.githubusercontent.com/martin-liu/mUserScripts/master/linkedinForDaisy/linkedinForDaisy.js
-// @version    0.5
+// @version    0.6
 // @description  Linkedin connecting script for Daisy Chu
 // @match      http*://*.linkedin.com/*
 // @copyright  2014+, Martin Liu
@@ -24,6 +24,10 @@ addJQuery(function($){
     return window.location.href.indexOf(path) > 0;
   }
 
+  function needClose() {
+    return pathContains('/people/pymk') || pathContains('people/iweReconnectAction') || pathContains('people/contacts-search-invite-submit-reconnect');
+  }
+
   function LinkedinConnect(options){
     this.default={'inviteNote':"I'd like to add you to my professional network on LinkedIn."};
     this.options = options;
@@ -35,7 +39,7 @@ addJQuery(function($){
         this.prepareButton();
       } else if (this.state.inInvitePage){
         this.doInvite();
-      } else if (this.state.needEmail || this.state.inSuccessPage){
+      } else if (this.state.needEmail || this.state.needClose){
         window.close();
       }
     };
@@ -56,8 +60,8 @@ addJQuery(function($){
         } else {
           this.state.needEmail = true;
         }
-      } else if (pathContains('/people/pymk') || pathContains('people/iweReconnectAction')){
-        this.state.inSuccessPage = true;
+      } else if (needClose()){
+        this.state.needClose = true;
       }
     };
 
