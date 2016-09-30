@@ -2,7 +2,7 @@
 // @name       Daisy-Linkedin_Connecting_Script
 // @namespace  http://martin-liu.github.io/
 // @updateURL  https://raw.githubusercontent.com/martin-liu/mUserScripts/master/linkedinForDaisy/linkedinForDaisy.js
-// @version    0.6
+// @version    0.7
 // @description  Linkedin connecting script for Daisy Chu
 // @match      http*://*.linkedin.com/*
 // @copyright  2014+, Martin Liu
@@ -67,7 +67,7 @@ addJQuery(function($){
 
     this.prepareButton = function(){
       var button = $('<button class="primary-action label" style="float:right;margin:10px">请猛击！！</button>');
-      button.on('click',function(obj){
+      var trigger = function(obj){
         var index = 0;
         return function(){
           if (index >= obj.state.connectList.length){
@@ -99,8 +99,15 @@ addJQuery(function($){
             }
           }
         };
-      }(this));
+      }(this);
+      button.on('click', trigger);
       button.insertBefore($('#body').children().first());
+
+      $(document).on("keypress", function(e){
+        if (e.altKey && e.which == 960) {
+          trigger();
+        }
+      });
     };
 
     this.doInvite = function(){
