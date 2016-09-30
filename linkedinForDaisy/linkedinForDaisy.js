@@ -41,7 +41,7 @@ addJQuery(function($){
                 this.state.connectList = $('#results a.primary-action-button.label').filter(function(){
                     return this.text == 'Connect';
                 });
-            } else if (window.location.href.indexOf('contacts-search-invite-submit-reconnect') > 0){
+            } else if (window.location.href.indexOf('/people/invite') > 0){
                 if ($('#IF-reason-iweReconnect').length > 0){
                     this.state.inInvitePage = true;
                     this.state.friendRadio = $('#IF-reason-iweReconnect');
@@ -50,14 +50,14 @@ addJQuery(function($){
                 } else {
                     this.state.needEmail = true;
                 }
-            } else if (window.location.href.indexOf('goback') > 0){
+            } else if (window.location.href.indexOf('/people/pymk') > 0){
                 this.state.inSuccessPage = true;
             }
         };
 
         this.prepareButton = function(){
-            var li = $('<li class="mod result idx0 people hover"><div class="bd"><div class="srp-actions blue-button"><div class="primary-action-button"><button class="primary-action label" style="background: none;border: none;color: white;">请猛击！！</button></div></div></div></li>');
-            li.find('button').on('click',function(obj){
+            var button = $('<button class="primary-action label" style="float:right;margin:10px">请猛击！！</button>');
+            button.on('click',function(obj){
                 var index = 0;
                 return function(){
                     if (index >= obj.state.connectList.length){
@@ -83,11 +83,10 @@ addJQuery(function($){
 
                         e.initEvent('click', true, true);
                         link.dispatchEvent(e);
-
                     }
-                }
+                };
             }(this));
-            li.insertBefore($('#body').children().first());
+            button.insertBefore($('#body').children().first());
         };
 
         this.doInvite = function(){
