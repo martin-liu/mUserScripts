@@ -2,9 +2,9 @@
 // @name       Gllue Data Mover
 // @namespace  http://martin-liu.github.io/
 // @updateURL  https://raw.githubusercontent.com/martin-liu/mUserScripts/master/gllueDataMover/gllueDataMover.js
-// @version    0.1
+// @version    0.3
 // @description  This script helps user to move data from gllue
-// @match      http://42.121.115.134/job
+// @match      http://42.121.115.134/
 // @copyright  2014+, Martin Liu
 // ==/UserScript==
 
@@ -37,7 +37,7 @@ var Handlebars=function(){var a=function(){"use strict";function a(a){this.strin
     function doProcess () {
         var cands = $('a').toArray().filter(function(a){
             return /^\/candidate#detail/.test($(a).attr('href'));
-        })
+        });
         cands = cands.map(function(c){
             var ret = /^\/candidate#detail!id=(\d*)$/.exec($(c).attr('href'));
             if (ret.length > 0){
@@ -49,9 +49,9 @@ var Handlebars=function(){var a=function(){"use strict";function a(a){this.strin
     function processCandidate(index, canId){
         var container = $('#gllueHackContainer');
 
-        $.get('/rest/candidate/' + canId + '?_v=45', function(data){
+        $.get('/rest/candidate/' + canId, function(data){
             // get 备注信息
-            $.get('/rest/note/list?paginate_by=200&external_type=candidate&external_id=' + canId + '&_v=45', function(note){
+            $.get('/rest/note/list?paginate_by=200&external_type=candidate&external_id=' + canId, function(note){
                 data.note = note;
                 container.append(renderData(data));
             });
