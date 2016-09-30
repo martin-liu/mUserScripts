@@ -7,6 +7,7 @@
 // @match      http*://*.linkedin.com/*
 // @copyright  2014+, Martin Liu
 // ==/UserScript==
+
 function addJQuery(callback) {
     var script = document.createElement("script");
     script.setAttribute("src", "//code.jquery.com/jquery-2.1.1.min.js");
@@ -17,6 +18,11 @@ function addJQuery(callback) {
     }, false);
     document.body.appendChild(script);
 }
+
+function pathContains(path) {
+  return window.location.href.indexOf(path) > 0;
+}
+
 addJQuery(function($){
     function LinkedinConnect(options){
         this.default={'inviteNote':"I'd like to add you to my professional network on LinkedIn."};
@@ -41,7 +47,7 @@ addJQuery(function($){
                 this.state.connectList = $('#results a.primary-action-button.label').filter(function(){
                     return this.text == 'Connect';
                 });
-            } else if (window.location.href.indexOf('/people/invite') > 0){
+            } else if (pathContains('/people/invite')){
                 if ($('#IF-reason-iweReconnect').length > 0){
                     this.state.inInvitePage = true;
                     this.state.friendRadio = $('#IF-reason-iweReconnect');
@@ -50,7 +56,7 @@ addJQuery(function($){
                 } else {
                     this.state.needEmail = true;
                 }
-            } else if (window.location.href.indexOf('/people/pymk') > 0){
+            } else if (pathContains('/people/pymk') || pathContains('people/iweReconnectAction')){
                 this.state.inSuccessPage = true;
             }
         };
