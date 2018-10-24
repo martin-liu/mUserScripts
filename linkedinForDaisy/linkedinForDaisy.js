@@ -2,7 +2,7 @@
 // @name       Daisy-Linkedin_Connecting_Script
 // @namespace  http://martin-liu.github.io/
 // @updateURL  https://raw.githubusercontent.com/martin-liu/mUserScripts/master/linkedinForDaisy/linkedinForDaisy.js
-// @version    0.15
+// @version    0.16
 // @description  Linkedin connecting script for Daisy Chu
 // @match      http*://*.linkedin.com/*
 // @copyright  2014+, Martin Liu
@@ -95,7 +95,6 @@
             await wait(500);
             return true;
           } else {
-            alert("Hi " + this.options.name + " , there's no results to process, please search another key word");
             return false;
           }
         }
