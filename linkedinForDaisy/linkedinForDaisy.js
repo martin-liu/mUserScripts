@@ -83,7 +83,7 @@
           if (!nextButton) {
             if (window.Ember) {
               window.Ember.$(document).scrollTop(500);
-              await wait(500);
+              await wait(1000);
             }
           }
           if (nextButton){
