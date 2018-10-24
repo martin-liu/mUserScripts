@@ -2,125 +2,154 @@
 // @name       Daisy-Linkedin_Connecting_Script
 // @namespace  http://martin-liu.github.io/
 // @updateURL  https://raw.githubusercontent.com/martin-liu/mUserScripts/master/linkedinForDaisy/linkedinForDaisy.js
-// @version    0.7
+// @version    0.8
 // @description  Linkedin connecting script for Daisy Chu
 // @match      http*://*.linkedin.com/*
 // @copyright  2014+, Martin Liu
 // ==/UserScript==
 
-function addJQuery(callback) {
-  var script = document.createElement("script");
-  script.setAttribute("src", "//code.jquery.com/jquery-2.1.1.min.js");
-  script.addEventListener('load', function() {
-    var script = document.createElement("script");
-    script.textContent = "(" + callback.toString() + ")(jQuery);";
-    document.body.appendChild(script);
-  }, false);
-  document.body.appendChild(script);
-}
+(function(){
+  const window = unsafeWindow.top;
+  const document = window.document;
+  const $ = document.querySelectorAll.bind(document);
 
-addJQuery(function($){
-  function pathContains(path) {
-    return window.location.href.indexOf(path) > 0;
+  function createElement(html) {
+    let wrapper = document.createElement('div');
+    wrapper.innerHTML = html;
+    return wrapper.firstElementChild;
   }
 
-  function needClose() {
-    return pathContains('/people/pymk') || pathContains('people/iweReconnectAction') || pathContains('people/contacts-search-invite-submit-reconnect');
+  function insertAfter(newNode, referenceNode) {
+    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
   }
 
-  function LinkedinConnect(options){
-    this.default={'inviteNote':"I'd like to add you to my professional network on LinkedIn."};
-    this.options = options;
-    this.state = {};
+  async function wait(time) {
+    return await new Promise(rs => setTimeout(rs, time));
+  }
 
-    this.execute = function(){
-      this.initState();
+  class LinkedinConnect {
+    constructor(options) {
+      this.default = {'inviteNote':"I'd like to add you to my professional network on LinkedIn."};
+      this.options = options;
+      this.state = {};
+    }
+
+    getConnectList() {
+      return [].filter.call($('.search-results .search-result__actions button'), d => d.innerText=='Connect');
+    }
+
+    pathContains(path) {
+      if (!Array.isArray(path)) {
+        path = [path];
+      }
+      let href = window.location.href;
+      return path.some(d => href.indexOf(path) > 0);
+    }
+
+    needClose() {
+      return this.pathContains(['/people/pymk', 'people/iweReconnectAction', 'people/contacts-search-invite-submit-reconnect']);
+    }
+
+    async execute() {
+      await this.initState();
       if (this.state.inSearchPage){
-        this.prepareButton();
+        if ($('button.daisying-btn').length == 0) {
+          this.prepareButton();
+        }
       } else if (this.state.inInvitePage){
         this.doInvite();
       } else if (this.state.needEmail || this.state.needClose){
         window.close();
       }
-    };
+    }
 
-    this.initState = function(){
-      if ($('#results').length > 0){
+    async initState() {
+      if ($('.search-results-page').length > 0){
         this.state.inSearchPage = true;
-        this.state.resultsArea = $('#results');
-        this.state.connectList = $('#results a.primary-action-button.label').filter(function(){
-          return this.text == 'Connect';
-        });
-      } else if (pathContains('/people/invite')){
-        if ($('#IF-reason-iweReconnect').length > 0){
-          this.state.inInvitePage = true;
-          this.state.friendRadio = $('#IF-reason-iweReconnect');
-          this.state.inviteNoteArea = $('#greeting-iweReconnect');
-          this.state.sumbitButton = $('input[name=iweReconnectSubmit]');
-        } else {
-          this.state.needEmail = true;
-        }
-      } else if (needClose()){
+        this.state.resultsArea = $('.search-results');
+      } else if (this.needClose()){
         this.state.needClose = true;
       }
-    };
+    }
 
-    this.prepareButton = function(){
-      var button = $('<button class="primary-action label" style="float:right;margin:10px">请猛击！！</button>');
-      var trigger = function(obj){
-        var index = 0;
-        return function(){
-          if (index >= obj.state.connectList.length){
-            // Go to next page
-            var next = $('.pagination li.active+li>a');
-            if (next){
-              next[0].click();
-              // Go to next page and reload to clean data
-              window.location.reload();
-              return true;
-            } else {
-              alert("Hi" + obj.options.name + " , there's no results to process, please search another key word");
-              return false;
-            }
+    prepareButton() {
+      var button = createElement('<button class="daisying-btn button-secondary-medium m5" style="position:fixed;right:200px;top:40px;z-index:99999">666</button>');
+      let index = 0;
+      const trigger = async () => {
+        let connectList = this.getConnectList();
+        if (index >= connectList.length){
+          // Go to next page
+          let nextButton = [].find.call($('.artdeco-pagination button'), d => d.innerText.trim()=='Next');
+          if (nextButton){
+            nextButton.click();
+
+            // Go to next page and reload to clean data
+            await wait(500);
+            window.location.reload();
+            return true;
+          } else {
+            alert("Hi " + this.options.name + " , there's no results to process, please search another key word");
+            return false;
           }
-          var a = obj.state.connectList[index++];
-          if (a){
-            if (a.click) {
-              a.click();
-            } else {
-              a.href += '&hack=true';
-
-              link = $("<a href='" + a.href + "' target='_blank'></a>").get(0);
-
-              var e = document.createEvent('MouseEvents');
-
-              e.initEvent('click', true, true);
-              link.dispatchEvent(e);
-            }
+        }
+        var a = connectList[index++];
+        if (a){
+          if (window.Ember) {
+            let y = window.scrollY + a.getBoundingClientRect().top;
+            window.Ember.$(document).scrollTop(y);
+            await wait(300);
           }
-        };
-      }(this);
-      button.on('click', trigger);
-      button.insertBefore($('#body').children().first());
+          if (a.click) {
+            a.click();
+            this.doInvite();
+          } else {
+            a.href += '&hack=true';
 
-      $(document).on("keypress", function(e){
-        if (e.altKey && e.which == 960) {
+            let link = $("<a href='" + a.href + "' target='_blank'></a>").get(0);
+
+            var e = document.createEvent('MouseEvents');
+
+            e.initEvent('click', true, true);
+            link.dispatchEvent(e);
+          }
+        }
+        return true;
+      };
+      button.onclick = trigger;
+      insertAfter(button, $('body')[0].children[0]);
+
+      document.body.onkeypress = (e) => {
+        if (e.altKey && e.which == 13) {
           trigger();
         }
-      });
+      };
     };
 
-    this.doInvite = function(){
-      this.state.friendRadio.prop('checked',true);
-      if (this.options.inviteNote){
-        var value = this.state.inviteNoteArea.text();
-        value.replace(this.default.inviteNote,this.options.inviteNote);
-        this.state.inviteNoteArea.text(value);
+    async doInvite (){
+      await wait(300);
+
+      let noteButton = [].find.call($('.modal button'), d => d.innerText=='Add a note');
+      if (noteButton) {
+        noteButton.click();
+        await wait(300);
+
+        let textArea = $('.modal textarea#custom-message');
+        if (textArea.length) {
+          textArea[0].value = this.options.inviteNote || this.default.inviteNote;
+
+          let inviteButton = [].find.call($('.modal button'), d => d.innerText=='Send invitation');
+          if (inviteButton) {
+            inviteButton.click();
+          }
+        }
       }
-      this.state.sumbitButton.click();
     };
   }
 
-  var Daisying = new LinkedinConnect({'name':'Daisy','inviteNote':"I'd like to add you to my professional network on LinkedIn."});
+  let Daisying = new LinkedinConnect({
+    name:'Daisy',
+    inviteNote: `Hi there, this is Technical Recruiter Daisy, I am looking for Tech Talents from Jr level to C level in AI/Big Data industry. I would like to connect you for future job opportunity. Thank you!`
+  });
   Daisying.execute();
-});
+
+})();
