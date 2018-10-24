@@ -2,7 +2,7 @@
 // @name       Daisy-Linkedin_Connecting_Script
 // @namespace  http://martin-liu.github.io/
 // @updateURL  https://raw.githubusercontent.com/martin-liu/mUserScripts/master/linkedinForDaisy/linkedinForDaisy.js
-// @version    0.14
+// @version    0.15
 // @description  Linkedin connecting script for Daisy Chu
 // @match      http*://*.linkedin.com/*
 // @copyright  2014+, Martin Liu
@@ -73,7 +73,8 @@
     }
 
     prepareButton() {
-      var button = createElement('<button class="daisying-btn button-secondary-medium m5" style="position:fixed;right:200px;top:40px;z-index:99999">666</button>');
+      var button = createElement('<button class="daisying-btn button-secondary-medium m5" style="position:fixed;right:270px;top:40px;z-index:99999">666</button>');
+      var autoButton = createElement('<button class="daisying-btn button-secondary-medium m5" style="position:fixed;right:150px;top:40px;z-index:99999">Auto 666</button>');
       let index = 0;
       const trigger = async () => {
         let connectList = this.getConnectList();
@@ -123,6 +124,11 @@
       };
       button.onclick = trigger;
       insertAfter(button, $('body')[0].children[0]);
+
+      autoButton.onclick = () => {
+        setInterval(trigger, 3000);
+      };
+      insertAfter(autoButton, $('body')[0].children[0]);
 
       document.body.onkeypress = (e) => {
         if (e.altKey && e.which == 13) {
