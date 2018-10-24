@@ -2,7 +2,7 @@
 // @name       Daisy-Linkedin_Connecting_Script
 // @namespace  http://martin-liu.github.io/
 // @updateURL  https://raw.githubusercontent.com/martin-liu/mUserScripts/master/linkedinForDaisy/linkedinForDaisy.js
-// @version    0.11
+// @version    0.12
 // @description  Linkedin connecting script for Daisy Chu
 // @match      http*://*.linkedin.com/*
 // @copyright  2014+, Martin Liu
@@ -134,7 +134,7 @@
     async doInvite (){
       await wait(300);
 
-      let needEmail = $('.modal input.email').length > 0;
+      let needEmail = $('.modal input#email').length > 0;
       if (needEmail) {
         let cancelButton = [].find.call($('.modal button.cancel'), d => d);
         if (cancelButton) {
