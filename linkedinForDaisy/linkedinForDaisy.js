@@ -2,7 +2,7 @@
 // @name       Daisy-Linkedin_Connecting_Script
 // @namespace  http://martin-liu.github.io/
 // @updateURL  https://raw.githubusercontent.com/martin-liu/mUserScripts/master/linkedinForDaisy/linkedinForDaisy.js
-// @version    0.8
+// @version    0.9
 // @description  Linkedin connecting script for Daisy Chu
 // @match      http*://*.linkedin.com/*
 // @copyright  2014+, Martin Liu
@@ -80,6 +80,12 @@
         if (index >= connectList.length){
           // Go to next page
           let nextButton = [].find.call($('.artdeco-pagination button'), d => d.innerText.trim()=='Next');
+          if (!nextButton) {
+            if (window.Ember) {
+              window.Ember.$(document).scrollTop(500);
+              await wait(500);
+            }
+          }
           if (nextButton){
             nextButton.click();
 
