@@ -2,7 +2,7 @@
 // @name       Daisy-Linkedin_Connecting_Script
 // @namespace  http://martin-liu.github.io/
 // @updateURL  https://raw.githubusercontent.com/martin-liu/mUserScripts/master/linkedinForDaisy/linkedinForDaisy.js
-// @version    0.16
+// @version    1.0.0
 // @description  Linkedin connecting script for Daisy Chu
 // @match      http*://*.linkedin.com/*
 // @copyright  2014+, Martin Liu
@@ -35,7 +35,7 @@
     }
 
     getConnectList() {
-      return [].filter.call($('.search-results .search-result__actions button'), d => d.innerText=='Connect');
+      return [].filter.call($('.reusable-search__result-container .entity-result__actions button'), d => d.innerText=='Connect');
     }
 
     pathContains(path) {
@@ -64,17 +64,16 @@
     }
 
     async initState() {
-      if ($('.search-results-page').length > 0){
+      if ($('.search-results-container').length > 0){
         this.state.inSearchPage = true;
-        this.state.resultsArea = $('.search-results');
       } else if (this.needClose()){
         this.state.needClose = true;
       }
     }
 
     prepareButton() {
-      var button = createElement('<button class="daisying-btn button-secondary-medium m5" style="position:fixed;right:270px;top:40px;z-index:99999">666</button>');
-      var autoButton = createElement('<button class="daisying-btn button-secondary-medium m5" style="position:fixed;right:150px;top:40px;z-index:99999">Auto 666</button>');
+      var button = createElement('<button class="daisying-btn artdeco-button artdeco-button--3 artdeco-button--primary" style="position:fixed;right:270px;top:62px;z-index:99999">666</button>');
+      var autoButton = createElement('<button class="daisying-btn artdeco-button artdeco-button--3 artdeco-button--primary" style="position:fixed;right:150px;top:62px;z-index:99999">Auto 666</button>');
       let index = 0;
       const trigger = async () => {
         let connectList = this.getConnectList();
@@ -82,10 +81,7 @@
           // Go to next page
           let nextButton = [].find.call($('.artdeco-pagination button'), d => d.innerText.trim()=='Next');
           if (!nextButton) {
-            if (window.Ember) {
-              window.Ember.$(document).scrollTop(500);
-              await wait(1000);
-            }
+            window.scrollBy(0, window.innerHeight);
           }
           if (nextButton){
             nextButton.click();
@@ -100,11 +96,11 @@
         }
         var a = connectList[index++];
         if (a){
-          if (window.Ember) {
-            let y = window.scrollY + a.getBoundingClientRect().top;
-            window.Ember.$(document).scrollTop(y);
-            await wait(300);
-          }
+          // scroll down and wait for load
+          let y = window.scrollY + a.getBoundingClientRect().top;
+          window.scrollBy(0, y);
+          await wait(300);
+
           if (a.click) {
             a.click();
             this.doInvite();
@@ -139,26 +135,28 @@
     async doInvite (){
       await wait(300);
 
-      let needEmail = $('.modal input#email').length > 0;
+      const modalCls = '.artdeco-modal';
+      let needEmail = $(`${modalCls} input#email`).length > 0;
       if (needEmail) {
-        let cancelButton = [].find.call($('.modal button[name=cancel]'), d => d);
+        let cancelButton = [].find.call($(`${modalCls} button[name=cancel]`), d => d);
         if (cancelButton) {
           cancelButton.click();
           await wait(300);
         }
         return;
       }
-      let noteButton = [].find.call($('.modal button'), d => d.innerText=='Add a note');
+      let noteButton = [].find.call($(`${modalCls} button`), d => d.innerText=='Add a note');
       if (noteButton) {
         noteButton.click();
         await wait(300);
 
-        let textArea = $('.modal textarea#custom-message');
+        let textArea = $(`${modalCls} textarea#custom-message`);
         if (textArea.length) {
           textArea[0].value = this.options.inviteNote || this.default.inviteNote;
 
-          let inviteButton = [].find.call($('.modal button'), d => d.innerText=='Send invitation');
+          let inviteButton = [].find.call($(`${modalCls} button`), d => d.innerText=='Send');
           if (inviteButton) {
+            inviteButton.disabled = false;
             inviteButton.click();
           }
         }
@@ -168,7 +166,7 @@
 
   let Daisying = new LinkedinConnect({
     name:'Daisy',
-    inviteNote: `Hi there, this is Technical Recruiter Daisy, I am looking for Tech Talents from Jr level to C level in AI/Big Data industry. I would like to connect you for future job opportunity. Thank you!`
+    inviteNote: `Hi there,I am Lead Recruiter of TuSimple(AI & Self-Drive, IPO@2021). Your background looks impressive and I’d like to connect with you for future job opportunities. Thank you!`
   });
   Daisying.execute();
 
