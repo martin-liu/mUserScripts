@@ -2,7 +2,7 @@
 // @name       Daisy-Linkedin_Connecting_Script
 // @namespace  http://martin-liu.github.io/
 // @updateURL  https://raw.githubusercontent.com/martin-liu/mUserScripts/master/linkedinForDaisy/linkedinForDaisy.js
-// @version    1.0.4
+// @version    1.0.5
 // @description  Linkedin connecting script for Daisy Chu
 // @match      http*://*.linkedin.com/*
 // @copyright  2014+, Martin Liu
@@ -130,9 +130,13 @@
           clearInterval(timer);
           timer = null;
           sessionStorage.setItem('_auto_666_', 'false');
+          autoButton.className = autoButton.className.replaceAll('primary', 'secondary');
+          autoButton.innerText = 'Auto 666 - disabled';
         } else {
           sessionStorage.setItem('_auto_666_', 'true');
           timer = setInterval(trigger, 3000);
+          autoButton.className = autoButton.className.replaceAll('secondary', 'primary');
+          autoButton.innerText = 'Auto 666 - enabled';
         }
       };
       insertAfter(autoButton, $('body')[0].children[0]);
