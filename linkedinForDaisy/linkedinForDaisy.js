@@ -82,7 +82,7 @@
       var autoButton = createElement('<button class="daisying-auto-btn artdeco-button artdeco-button--3 artdeco-button--primary" style="position:fixed;right:150px;top:62px;z-index:99999">Auto 666</button>');
       const trigger = async () => {
         let connectList = this.getConnectList();
-        if (connectList.length){
+        if (connectList.length == 0){
           // Go to next page
           let nextButton = [].find.call($('.artdeco-pagination button'), d => d.innerText.trim()=='Next');
           if (!nextButton) {
