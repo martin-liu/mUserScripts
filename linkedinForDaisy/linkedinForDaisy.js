@@ -2,7 +2,7 @@
 // @name       Daisy-Linkedin_Connecting_Script
 // @namespace  http://martin-liu.github.io/
 // @updateURL  https://raw.githubusercontent.com/martin-liu/mUserScripts/master/linkedinForDaisy/linkedinForDaisy.js
-// @version    1.0.1
+// @version    1.0.2
 // @description  Linkedin connecting script for Daisy Chu
 // @match      http*://*.linkedin.com/*
 // @copyright  2014+, Martin Liu
@@ -53,8 +53,14 @@
     async execute() {
       await this.initState();
       if (this.state.inSearchPage){
+        let autoButton = null;
         if ($('button.daisying-btn').length == 0) {
-          this.prepareButton();
+          autoButton = this.prepareButton()[1];
+        } else {
+          autoButton = $('button.daisying-auto-btn');
+        }
+        if (sessionStorage.getItem('_auto_666_') == 'true') {
+          autoButton.click();
         }
       } else if (this.state.inInvitePage){
         this.doInvite();
@@ -73,11 +79,10 @@
 
     prepareButton() {
       var button = createElement('<button class="daisying-btn artdeco-button artdeco-button--3 artdeco-button--primary" style="position:fixed;right:270px;top:62px;z-index:99999">666</button>');
-      var autoButton = createElement('<button class="daisying-btn artdeco-button artdeco-button--3 artdeco-button--primary" style="position:fixed;right:150px;top:62px;z-index:99999">Auto 666</button>');
-      let index = 0;
+      var autoButton = createElement('<button class="daisying-auto-btn artdeco-button artdeco-button--3 artdeco-button--primary" style="position:fixed;right:150px;top:62px;z-index:99999">Auto 666</button>');
       const trigger = async () => {
         let connectList = this.getConnectList();
-        if (index >= connectList.length){
+        if (connectList.length){
           // Go to next page
           let nextButton = [].find.call($('.artdeco-pagination button'), d => d.innerText.trim()=='Next');
           if (!nextButton) {
@@ -86,15 +91,13 @@
           if (nextButton){
             nextButton.click();
 
-            // Go to next page and reset state
-            index = 0;
             await wait(500);
             return true;
           } else {
             return false;
           }
         }
-        var a = connectList[index++];
+        var a = connectList[0];
         if (a){
           // scroll down and wait for load
           let y = window.scrollY + a.getBoundingClientRect().top;
@@ -120,9 +123,17 @@
       button.onclick = trigger;
       insertAfter(button, $('body')[0].children[0]);
 
+      let timer = null;
       autoButton.onclick = () => {
-        setInterval(trigger, 3000);
-        autoButton.disabled = true;
+        if (timer != null) {
+          // if already have a timer, means already enabled, this click will disable & reset
+          clearInterval(timer);
+          timer = null;
+          sessionStorage.setItem('_auto_666_', 'false');
+        } else {
+          sessionStorage.setItem('_auto_666_', 'true');
+          timer = setInterval(trigger, 3000);
+        }
       };
       insertAfter(autoButton, $('body')[0].children[0]);
 
@@ -131,6 +142,8 @@
           trigger();
         }
       };
+
+      return [button, autoButton];
     };
 
     async doInvite (){
