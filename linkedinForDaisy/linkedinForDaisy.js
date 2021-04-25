@@ -2,7 +2,7 @@
 // @name       Daisy-Linkedin_Connecting_Script
 // @namespace  http://martin-liu.github.io/
 // @updateURL  https://raw.githubusercontent.com/martin-liu/mUserScripts/master/linkedinForDaisy/linkedinForDaisy.js
-// @version    1.0.0
+// @version    1.0.1
 // @description  Linkedin connecting script for Daisy Chu
 // @match      http*://*.linkedin.com/*
 // @copyright  2014+, Martin Liu
@@ -122,6 +122,7 @@
 
       autoButton.onclick = () => {
         setInterval(trigger, 3000);
+        autoButton.disabled = true;
       };
       insertAfter(autoButton, $('body')[0].children[0]);
 
@@ -166,7 +167,7 @@
 
   let Daisying = new LinkedinConnect({
     name:'Daisy',
-    inviteNote: `Hi there,I am Lead Recruiter of TuSimple(AI & Self-Drive, IPO@2021). Your background looks impressive and I’d like to connect with you for future job opportunities. Thank you!`
+    inviteNote: `Hi there, I am Lead Recruiter of TuSimple(AI & Self-Drive, IPO@2021). Your background looks impressive and I’d like to connect with you for future job opportunities. Thank you!`
   });
   Daisying.execute();
 
