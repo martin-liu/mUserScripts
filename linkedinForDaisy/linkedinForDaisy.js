@@ -2,7 +2,7 @@
 // @name       Daisy-Linkedin_Connecting_Script
 // @namespace  http://martin-liu.github.io/
 // @updateURL  https://raw.githubusercontent.com/martin-liu/mUserScripts/master/linkedinForDaisy/linkedinForDaisy.js
-// @version    1.0.2
+// @version    1.0.3
 // @description  Linkedin connecting script for Daisy Chu
 // @match      http*://*.linkedin.com/*
 // @copyright  2014+, Martin Liu
