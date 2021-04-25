@@ -2,7 +2,7 @@
 // @name       Daisy-Linkedin_Connecting_Script
 // @namespace  http://martin-liu.github.io/
 // @updateURL  https://raw.githubusercontent.com/martin-liu/mUserScripts/master/linkedinForDaisy/linkedinForDaisy.js
-// @version    1.0.7
+// @version    1.0.8
 // @description  Linkedin connecting script for Daisy Chu
 // @match      http*://*.linkedin.com/*
 // @copyright  2014+, Martin Liu
@@ -53,12 +53,9 @@
     async execute() {
       await this.initState();
       if (this.state.inSearchPage){
-        let autoButton = null;
-        if ($('button.daisying-auto-btn').length == 0) {
-          autoButton = this.prepareButton()[1];
-        } else {
-          autoButton = $('button.daisying-auto-btn')[0];
-        }
+        // remove existing buttons
+        $('button.daisying-btn').forEach(d => d.remove());
+        let autoButton = this.prepareButton()[1];
         if (sessionStorage.getItem('_auto_666_') == 'true') {
           autoButton.click();
         }
@@ -79,7 +76,7 @@
 
     prepareButton() {
       var button = createElement('<button class="daisying-btn artdeco-button artdeco-button--3 artdeco-button--primary" style="position:fixed;right:290px;top:62px;z-index:99999">666</button>');
-      var autoButton = createElement('<button class="daisying-auto-btn artdeco-button artdeco-button--3 artdeco-button--primary" style="position:fixed;right:150px;top:62px;z-index:99999">Auto 666</button>');
+      var autoButton = createElement('<button class="daisying-btn daisying-auto-btn artdeco-button artdeco-button--3 artdeco-button--primary" style="position:fixed;right:150px;top:62px;z-index:99999">Auto 666</button>');
       const trigger = async () => {
         let connectList = this.getConnectList();
         if (connectList.length == 0){
