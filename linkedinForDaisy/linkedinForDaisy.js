@@ -2,7 +2,7 @@
 // @name       Daisy-Linkedin_Connecting_Script
 // @namespace  http://martin-liu.github.io/
 // @updateURL  https://raw.githubusercontent.com/martin-liu/mUserScripts/master/linkedinForDaisy/linkedinForDaisy.js
-// @version    1.0.3
+// @version    1.0.4
 // @description  Linkedin connecting script for Daisy Chu
 // @match      http*://*.linkedin.com/*
 // @copyright  2014+, Martin Liu
@@ -54,10 +54,10 @@
       await this.initState();
       if (this.state.inSearchPage){
         let autoButton = null;
-        if ($('button.daisying-btn').length == 0) {
+        if ($('button.daisying-auto-btn').length == 0) {
           autoButton = this.prepareButton()[1];
         } else {
-          autoButton = $('button.daisying-auto-btn');
+          autoButton = $('button.daisying-auto-btn')[0];
         }
         if (sessionStorage.getItem('_auto_666_') == 'true') {
           autoButton.click();
