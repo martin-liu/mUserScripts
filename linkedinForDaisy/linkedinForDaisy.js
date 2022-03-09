@@ -186,7 +186,7 @@
 
   let Daisying = new LinkedinConnect({
     name:'Daisy',
-    inviteNote: `Hi there, I am Lead Recruiter of TuSimple(AI & Self-Drive, IPO@2021). Your background looks impressive and I’d like to connect with you for future job opportunities. Thank you!`
+    inviteNote: `Hi there, I am the Senior Manager of Talent Acquisition at Varis, a well-funded SaaS startup, created by former Amazon Business founding Team, see https://www.govaris.com/about-us. Your background looks impressive and I’d like to connect with you for future job opportunities. Thank you!`
   });
   Daisying.execute();
 
