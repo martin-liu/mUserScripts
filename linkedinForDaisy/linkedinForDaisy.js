@@ -2,7 +2,7 @@
 // @name       Daisy-Linkedin_Connecting_Script
 // @namespace  http://martin-liu.github.io/
 // @updateURL  https://raw.githubusercontent.com/martin-liu/mUserScripts/master/linkedinForDaisy/linkedinForDaisy.js
-// @version    1.0.10
+// @version    1.0.11
 // @description  Linkedin connecting script for Daisy Chu
 // @match      http*://*.linkedin.com/*
 // @copyright  2014+, Martin Liu
@@ -186,7 +186,7 @@
 
   let Daisying = new LinkedinConnect({
     name:'Daisy',
-    inviteNote: `Hi there, I am the Senior Manager of Talent Acquisition at Varis, a well-funded SaaS startup, created by former Amazon Business founding Team, see https://www.govaris.com/about-us. Your background looks impressive and I’d like to connect with you for future job opportunities. Thank you!`
+    inviteNote: `Hi, your background looks impressive and I’d like to connect with you for future job opportunities. Thank you!`
   });
   Daisying.execute();
 
