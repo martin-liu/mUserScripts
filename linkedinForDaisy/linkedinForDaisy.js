@@ -2,7 +2,7 @@
 // @name       Daisy-Linkedin_Connecting_Script
 // @namespace  http://martin-liu.github.io/
 // @updateURL  https://raw.githubusercontent.com/martin-liu/mUserScripts/master/linkedinForDaisy/linkedinForDaisy.js
-// @version    1.0.11
+// @version    1.0.12
 // @description  Linkedin connecting script for Daisy Chu
 // @match      http*://*.linkedin.com/*
 // @copyright  2014+, Martin Liu
@@ -59,9 +59,7 @@
         if (sessionStorage.getItem('_auto_666_') == 'true') {
           autoButton.click();
         }
-      } else if (this.state.inInvitePage){
-        this.doInvite();
-      } else if (this.state.needEmail || this.state.needClose){
+      } else if (this.state.needClose){
         window.close();
       }
     }
@@ -114,6 +112,8 @@
             e.initEvent('click', true, true);
             link.dispatchEvent(e);
           }
+          // remove the button in case of still active
+          a.remove();
         }
         return true;
       };
@@ -151,9 +151,9 @@
       await wait(300);
 
       const modalCls = '.artdeco-modal';
-      let needEmail = $(`${modalCls} input#email`).length > 0;
+      let needEmail = $(`${modalCls} input[type=email]`).length > 0;
       if (needEmail) {
-        let cancelButton = [].find.call($(`${modalCls} button[name=cancel]`), d => d);
+        let cancelButton = [].find.call($(`${modalCls} button[aria-label=Dismiss]`), d => d);
         if (cancelButton) {
           cancelButton.click();
           await wait(300);
@@ -186,7 +186,7 @@
 
   let Daisying = new LinkedinConnect({
     name:'Daisy',
-    inviteNote: `Hi, your background looks impressive and I’d like to connect with you for future job opportunities. Thank you!`
+    inviteNote: `Hi there, I am an HR at ByteDance/Tiktok, your background looks impressive and I’d like to connect with you for future job opportunities. Thank you!`
   });
   Daisying.execute();
 
